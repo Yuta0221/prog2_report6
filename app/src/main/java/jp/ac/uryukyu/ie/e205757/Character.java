@@ -2,12 +2,10 @@ package jp.ac.uryukyu.ie.e205757;
 import java.util.ArrayList;
 
 public class Character {
-    private String name;
     ArrayList<Integer> hand = new ArrayList<Integer>();
     private int point;
 
-    Character(String name, ArrayList<Integer> cards){
-        this.name = name;
+    Character(ArrayList<Integer> cards){
         this.hand = cards;
         this.point = 0;
     }

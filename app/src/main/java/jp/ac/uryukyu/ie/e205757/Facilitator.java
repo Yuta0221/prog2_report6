@@ -20,10 +20,10 @@ public class Facilitator {
     public Facilitator() {
         Random bCard = new Random();
         ArrayList<Integer> bHand = this.distribute(bCard);
-        Bot b = new Bot("ボット", bHand);
+        Bot b = new Bot(bHand);
         Random pCard = new Random();
         ArrayList<Integer> cHand = this.distribute(pCard);
-        Player p = new Player("プレイヤー", cHand);
+        Player p = new Player(cHand);
         c.add(p);
         c.add(b);
 
@@ -84,7 +84,7 @@ public class Facilitator {
             int j = botHand.get(i);
             botPoint += j;
         }
-        
+
         System.out.println("あなたの手札の合計は" + playerPoint + "です。");
         System.out.println("ボットの手札の合計は" + botPoint + "です。");
 
