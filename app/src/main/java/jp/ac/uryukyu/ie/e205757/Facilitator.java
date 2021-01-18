@@ -9,6 +9,10 @@ import java.util.ArrayList;
  */
 public class Facilitator {
 
+    /**
+     * ラウンドを保存するフィールド
+     * 初期値はコンストラクタによって1に設定される
+     */
     private int round;
 
     /**
@@ -73,6 +77,7 @@ public class Facilitator {
         Scanner scanner = new Scanner(System.in);
         int num = scanner.nextInt();
         discard(p, num);
+        addCard(p);
         System.out.println("ボットの手札は" + b.getHand() + "です");
         judge(p, b);
         int finish = isFinished();
@@ -82,6 +87,13 @@ public class Facilitator {
         this.round += 1;
     }
 
+    /**
+     * カードを捨てるメソッド
+     * 入力した番号がプレイヤーの手札に存在する場合、1つだけ該当カードを削除する
+     * 
+     * @param p プレイヤーのインスタンス
+     * @param cardNumber プレイヤーが入力したカード番号
+     */
     public void discard(Character p, int cardNumber) {
         ArrayList<Integer> playerHand = new ArrayList<Integer>();
         playerHand = p.getHand();
@@ -93,9 +105,12 @@ public class Facilitator {
                 break;
             }
         }
-        addCard(p);
     }
 
+    /**
+     * カードを捨てた後、手札に1枚だけランダムでカードを追加するメソッド
+     * @param p プレイヤーのインスタンス
+     */
     public void addCard(Character p) {
         Random r = new Random();
         int getCard = r.nextInt(5);
@@ -103,6 +118,12 @@ public class Facilitator {
         System.out.println(getCard + "のカードを手に入れました。\nあなたの手札は" + p.getHand() + "です");
     }
 
+    /**
+     * プレイヤーとボットの手札のカード番号の合計を計算し、高い方のポイントを1プラスするメソッド
+     * 引き分けだった場合はどちらのポイントも変化しない
+     * @param p　プレイヤーのインスタンス
+     * @param b　ボットのインスタンス
+     */
     public void judge(Character p, Character b) {
         ArrayList<Integer> playerHand = new ArrayList<Integer>();
         playerHand = p.getHand();
@@ -133,6 +154,11 @@ public class Facilitator {
         }
     }
 
+    /**
+     * ゲームの状態を「勝利」「敗北」「継続中」の3つに分け、それぞれの状態をint型で返すメソッド
+     * 「勝利」= 2、「敗北」= 1、「継続中」= 2 で表す
+     * @return ゲームの状態
+     */
     public int isFinished() {
         var p = c.get(0);
         var b = c.get(1);
