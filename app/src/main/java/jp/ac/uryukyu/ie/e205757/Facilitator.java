@@ -65,7 +65,7 @@ public class Facilitator {
             ArrayList<Integer> cHand = this.distribute(pCard);
             p.setHand(cHand);
         }
-        System.out.println("現在のポイントは" + p.getPoint() + ":" + b.getPoint() + "です。");
+        System.out.println("\n現在のポイントは" + p.getPoint() + ":" + b.getPoint() + "です。");
         if (this.round == 1) {
             System.out.println("3点先取で勝利です。");
         }
