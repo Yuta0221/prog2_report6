@@ -20,10 +20,10 @@ public class Facilitator {
     public Facilitator() {
         Random bCard = new Random();
         ArrayList<Integer> bHand = this.distribute(bCard);
-        Bot b = new Bot(bHand);
+        Character b = new Character(bHand);
         Random pCard = new Random();
         ArrayList<Integer> cHand = this.distribute(pCard);
-        Player p = new Player(cHand);
+        Character p = new Character(cHand);
         c.add(p);
         c.add(b);
 
