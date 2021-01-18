@@ -5,14 +5,14 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Facilitator {
-    private int cardNumber;
     ArrayList<Character> c = new ArrayList<Character>();
 
     public ArrayList<Integer> distribute(Random r) {
+        int cardNumber;
         ArrayList<Integer> distributeCards = new ArrayList<Integer>();
         for (int i = 0; i < 5; i++) {
-            this.cardNumber = r.nextInt(5);
-            distributeCards.add(this.cardNumber);
+            cardNumber = r.nextInt(5);
+            distributeCards.add(cardNumber);
         }
         return distributeCards;
     }
@@ -26,14 +26,7 @@ public class Facilitator {
         Character p = new Character(cHand);
         c.add(p);
         c.add(b);
-
-        progress();
     }
-
-    /*
-     * public boolean isFinished(){ var p = c.get(0); var b = c.get(1); if(){ return
-     * true; }else{ return false; } }
-     */
 
     public void progress() {
         var p = c.get(0);
