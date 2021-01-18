@@ -3,6 +3,7 @@ package jp.ac.uryukyu.ie.e205757;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 /**
  * ゲームの進行を担うクラス
@@ -76,7 +77,7 @@ public class Facilitator {
         Scanner scanner1 = new Scanner(System.in);
         Scanner scanner2 = new Scanner(System.in);
         scan(scanner1, scanner2, p);
-        
+
         System.out.println("ボットの手札は" + b.getHand() + "です");
         judge(p, b);
         int finish = isFinished();
@@ -88,33 +89,40 @@ public class Facilitator {
     }
 
     /**
-     * カード交換を行うメソッド
+     * カード交換を行うメソッド 捨てたいカードを入力する際、
+     * 
      * @param scanner1 カードを捨てるかどうかを選択した際の入力内容を保存する
      * @param scanner2 入力された捨てるカードの番号を保存する
-     * @param p プレイヤーのインスタンス
+     * @param p        プレイヤーのインスタンス
      */
-    public void scan(Scanner scanner1, Scanner scanner2, Character p){
+    public void scan(Scanner scanner1, Scanner scanner2, Character p) {
         System.out.printf("カードを捨てますか？捨てる場合はy、捨てない場合はnを押してください。:");
         String answer = scanner1.nextLine();
-
+        Integer num;
         if (answer.equals("y")) {
             System.out.printf("捨てたいカードの数字を入力してください。:");
-            int num = scanner2.nextInt();
-            discard(p, num);
-            addCard(p);
-        }else if(answer.equals("n")){
+            try {
+                num = scanner2.nextInt();
+                discard(p, num);
+                addCard(p);
+            } catch (InputMismatchException i) {
+                System.out.println("入力が正しくありません。カードは変更されませんでした。");
+            }
+        } else if (answer.equals("n")) {
             System.out.println("カードを捨てませんでした。");
-        }else{
+        } else {
             System.out.println("入力が正しくありません。カードは変更されませんでした。");
         }
     }
+
     /**
      * カードを捨てるメソッド 入力した番号がプレイヤーの手札に存在する場合、1つだけ該当カードを削除する
-     * 
+     * 手札に入力した番号のカードが存在しない場合、カードを捨てずにゲームを進める
      * @param p          プレイヤーのインスタンス
      * @param cardNumber プレイヤーが入力したカード番号
      */
     public void discard(Character p, int cardNumber) {
+        boolean existNumber = false;
         ArrayList<Integer> playerHand = new ArrayList<Integer>();
         playerHand = p.getHand();
         System.out.println(cardNumber + "のカードを捨てました。");
@@ -122,17 +130,18 @@ public class Facilitator {
             int j = playerHand.get(i);
             if (cardNumber == j) {
                 playerHand.remove(i);
+                existNumber = true;
                 break;
             }
-            if (i == playerHand.size()) {
-                System.out.println("該当のカードがありません。");
-            }
+        }
+        if (existNumber == false) {
+            System.out.println("該当のカードがありません。");
         }
     }
 
     /**
      * カードを捨てた後、手札に1枚だけランダムでカードを追加するメソッド
-     * 
+     * カードを捨てなかった場合、カードは追加されない
      * @param p プレイヤーのインスタンス
      */
     public void addCard(Character p) {
