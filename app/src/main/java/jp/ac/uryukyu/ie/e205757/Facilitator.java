@@ -10,8 +10,7 @@ import java.util.ArrayList;
 public class Facilitator {
 
     /**
-     * ラウンドを保存するフィールド
-     * 初期値はコンストラクタによって1に設定される
+     * ラウンドを保存するフィールド 初期値はコンストラクタによって1に設定される
      */
     private int round;
 
@@ -71,58 +70,87 @@ public class Facilitator {
         }
         System.out.println("あなたの手札は" + p.getHand() + "です");
         if (this.round == 1) {
-            System.out.println("自分の手札から1枚だけ捨ててランダムな1枚と交換することができます。(捨てたくない場合はそのままEnter)");
+            System.out.println("自分の手札から1枚だけ捨ててランダムな1枚と交換することができます。");
         }
-        System.out.println("捨てたいカードの数字を入力してください。");
-        Scanner scanner = new Scanner(System.in);
-        int num = scanner.nextInt();
-        discard(p, num);
-        addCard(p);
+
+        Scanner scanner1 = new Scanner(System.in);
+        Scanner scanner2 = new Scanner(System.in);
+        scan(scanner1, scanner2, p);
+        
         System.out.println("ボットの手札は" + b.getHand() + "です");
         judge(p, b);
         int finish = isFinished();
         if (finish == 0 && finish == 1) {
-            scanner.close();
+            scanner1.close();
+            scanner2.close();
         }
         this.round += 1;
     }
 
     /**
-     * カードを捨てるメソッド
-     * 入力した番号がプレイヤーの手札に存在する場合、1つだけ該当カードを削除する
-     * 
+     * カード交換を行うメソッド
+     * @param scanner1 カードを捨てるかどうかを選択した際の入力内容を保存する
+     * @param scanner2 入力された捨てるカードの番号を保存する
      * @param p プレイヤーのインスタンス
+     */
+    public void scan(Scanner scanner1, Scanner scanner2, Character p){
+        System.out.printf("カードを捨てますか？捨てる場合はy、捨てない場合はnを押してください。:");
+        String answer = scanner1.nextLine();
+
+        if (answer.equals("y")) {
+            System.out.printf("捨てたいカードの数字を入力してください。:");
+            int num = scanner2.nextInt();
+            discard(p, num);
+            addCard(p);
+        }else if(answer.equals("n")){
+            System.out.println("カードを捨てませんでした。");
+        }else{
+            System.out.println("入力が正しくありません。カードは変更されませんでした。");
+        }
+    }
+    /**
+     * カードを捨てるメソッド 入力した番号がプレイヤーの手札に存在する場合、1つだけ該当カードを削除する
+     * 
+     * @param p          プレイヤーのインスタンス
      * @param cardNumber プレイヤーが入力したカード番号
      */
     public void discard(Character p, int cardNumber) {
         ArrayList<Integer> playerHand = new ArrayList<Integer>();
         playerHand = p.getHand();
-        System.out.println(cardNumber + "を捨てました。");
+        System.out.println(cardNumber + "のカードを捨てました。");
         for (int i = 0; i < playerHand.size(); i++) {
             int j = playerHand.get(i);
             if (cardNumber == j) {
                 playerHand.remove(i);
                 break;
             }
+            if (i == playerHand.size()) {
+                System.out.println("該当のカードがありません。");
+            }
         }
     }
 
     /**
      * カードを捨てた後、手札に1枚だけランダムでカードを追加するメソッド
+     * 
      * @param p プレイヤーのインスタンス
      */
     public void addCard(Character p) {
-        Random r = new Random();
-        int getCard = r.nextInt(5);
-        p.hand.add(getCard);
-        System.out.println(getCard + "のカードを手に入れました。\nあなたの手札は" + p.getHand() + "です");
+        ArrayList<Integer> playerHand = new ArrayList<Integer>();
+        playerHand = p.getHand();
+        if (playerHand.size() < 5) {
+            Random r = new Random();
+            int getCard = r.nextInt(5);
+            p.hand.add(getCard);
+            System.out.println(getCard + "のカードを手に入れました。\nあなたの手札は" + p.getHand() + "です");
+        }
     }
 
     /**
-     * プレイヤーとボットの手札のカード番号の合計を計算し、高い方のポイントを1プラスするメソッド
-     * 引き分けだった場合はどちらのポイントも変化しない
-     * @param p　プレイヤーのインスタンス
-     * @param b　ボットのインスタンス
+     * プレイヤーとボットの手札のカード番号の合計を計算し、高い方のポイントを1プラスするメソッド 引き分けだった場合はどちらのポイントも変化しない
+     * 
+     * @param p プレイヤーのインスタンス
+     * @param b ボットのインスタンス
      */
     public void judge(Character p, Character b) {
         ArrayList<Integer> playerHand = new ArrayList<Integer>();
@@ -155,8 +183,8 @@ public class Facilitator {
     }
 
     /**
-     * ゲームの状態を「勝利」「敗北」「継続中」の3つに分け、それぞれの状態をint型で返すメソッド
-     * 「勝利」= 2、「敗北」= 1、「継続中」= 2 で表す
+     * ゲームの状態を「勝利」「敗北」「継続中」の3つに分け、それぞれの状態をint型で返すメソッド 「勝利」= 2、「敗北」= 1、「継続中」= 2 で表す
+     * 
      * @return ゲームの状態
      */
     public int isFinished() {
