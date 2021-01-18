@@ -18,8 +18,9 @@ public class Facilitator {
 
     /**
      * カードを配るメソッド
-     * @param r
-     * @return
+     * 
+     * @param r 0~4の中からランダムに決まるカードの番号
+     * @return ランダムに選ばれた5枚のカードの組
      */
     public ArrayList<Integer> distribute(Random r) {
         int cardNumber;
@@ -31,6 +32,9 @@ public class Facilitator {
         return distributeCards;
     }
 
+    /**
+     * ラウンドを1に初期化後、プレイヤーとボットのインスタンスを作り、distribute(Random r)でそれぞれにカードを配るコンストラクタ
+     */
     public Facilitator() {
         this.round = 1;
         Random bCard = new Random();
@@ -43,15 +47,26 @@ public class Facilitator {
         c.add(b);
     }
 
+    /**
+     * ゲームの進行を行うメソッド 基本的な出力とメソッド実行を担う
+     */
     public void progress() {
         var p = c.get(0);
         var b = c.get(1);
+        if (this.round >= 2) {
+            Random bCard = new Random();
+            ArrayList<Integer> bHand = this.distribute(bCard);
+            b.setHand(bHand);
+            Random pCard = new Random();
+            ArrayList<Integer> cHand = this.distribute(pCard);
+            p.setHand(cHand);
+        }
         System.out.println("現在のポイントは" + p.getPoint() + ":" + b.getPoint() + "です。");
-        if(this.round == 1){
+        if (this.round == 1) {
             System.out.println("3点先取で勝利です。");
         }
         System.out.println("あなたの手札は" + p.getHand() + "です");
-        if(this.round == 1){
+        if (this.round == 1) {
             System.out.println("自分の手札から1枚だけ捨ててランダムな1枚と交換することができます。(捨てたくない場合はそのままEnter)");
         }
         System.out.println("捨てたいカードの数字を入力してください。");
@@ -61,7 +76,7 @@ public class Facilitator {
         System.out.println("ボットの手札は" + b.getHand() + "です");
         judge(p, b);
         int finish = isFinished();
-        if(finish == 0 && finish == 1){
+        if (finish == 0 && finish == 1) {
             scanner.close();
         }
         this.round += 1;
@@ -88,18 +103,18 @@ public class Facilitator {
         System.out.println(getCard + "のカードを手に入れました。\nあなたの手札は" + p.getHand() + "です");
     }
 
-    public void judge(Character p, Character b){
+    public void judge(Character p, Character b) {
         ArrayList<Integer> playerHand = new ArrayList<Integer>();
         playerHand = p.getHand();
         int playerPoint = 0;
-        for(int i=0; i<playerHand.size(); i++){
+        for (int i = 0; i < playerHand.size(); i++) {
             int j = playerHand.get(i);
             playerPoint += j;
         }
         ArrayList<Integer> botHand = new ArrayList<Integer>();
         botHand = b.getHand();
         int botPoint = 0;
-        for(int i=0; i<botHand.size(); i++){
+        for (int i = 0; i < botHand.size(); i++) {
             int j = botHand.get(i);
             botPoint += j;
         }
@@ -107,28 +122,26 @@ public class Facilitator {
         System.out.println("あなたの手札の合計は" + playerPoint + "です。");
         System.out.println("ボットの手札の合計は" + botPoint + "です。");
 
-        if(playerPoint > botPoint){
-            int point = p.getPoint();
-            p.setPoint(point+1);
+        if (playerPoint > botPoint) {
+            p.setPoint();
             System.out.println("あなたの勝ちです！");
-        }else if(playerPoint < botPoint){
-            int point = b.getPoint();
-            b.setPoint(point+1);
+        } else if (playerPoint < botPoint) {
+            b.setPoint();
             System.out.println("あなたの負けです…");
-        }else{
+        } else {
             System.out.println("引き分けです。");
         }
     }
 
-    public int isFinished(){
+    public int isFinished() {
         var p = c.get(0);
         var b = c.get(1);
         final int MATCHPOINT = 3;
-        if(p.getPoint() == MATCHPOINT){
+        if (p.getPoint() == MATCHPOINT) {
             return 0;
-        }else if(b.getPoint() == MATCHPOINT){
+        } else if (b.getPoint() == MATCHPOINT) {
             return 1;
-        }else{
+        } else {
             return 2;
         }
     }

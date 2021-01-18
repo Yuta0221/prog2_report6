@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Character {
     ArrayList<Integer> hand = new ArrayList<Integer>();
-    private int point;
+    private int point = 0;
 
     Character(ArrayList<Integer> cards){
         this.hand = cards;
@@ -18,8 +18,11 @@ public class Character {
         return this.point;
     }
 
-    public void setPoint(int point){
-        this.point = point;
+    public void setPoint(){
+        this.point += 1;
     }
 
+    public void setHand(ArrayList<Integer> hand){
+        this.hand = hand;
+    }
 }
