@@ -4,9 +4,23 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+/**
+ * ゲームの進行を担うクラス
+ */
 public class Facilitator {
+
+    private int round;
+
+    /**
+     * プレイヤーとボットのインスタンスをフィールドに保存するためのリスト
+     */
     ArrayList<Character> c = new ArrayList<Character>();
 
+    /**
+     * カードを配るメソッド
+     * @param r
+     * @return
+     */
     public ArrayList<Integer> distribute(Random r) {
         int cardNumber;
         ArrayList<Integer> distributeCards = new ArrayList<Integer>();
@@ -18,6 +32,7 @@ public class Facilitator {
     }
 
     public Facilitator() {
+        this.round = 1;
         Random bCard = new Random();
         ArrayList<Integer> bHand = this.distribute(bCard);
         Character b = new Character(bHand);
@@ -31,14 +46,25 @@ public class Facilitator {
     public void progress() {
         var p = c.get(0);
         var b = c.get(1);
+        System.out.println("現在のポイントは" + p.getPoint() + ":" + b.getPoint() + "です。");
+        if(this.round == 1){
+            System.out.println("3点先取で勝利です。");
+        }
         System.out.println("あなたの手札は" + p.getHand() + "です");
-        System.out.println("自分の手札から1枚だけ捨ててランダムな1枚と交換することができます。\n捨てたいカードの数字を入力してください。(捨てたくない場合はそのままEnter)");
+        if(this.round == 1){
+            System.out.println("自分の手札から1枚だけ捨ててランダムな1枚と交換することができます。(捨てたくない場合はそのままEnter)");
+        }
+        System.out.println("捨てたいカードの数字を入力してください。");
         Scanner scanner = new Scanner(System.in);
         int num = scanner.nextInt();
         discard(p, num);
-        scanner.close();
         System.out.println("ボットの手札は" + b.getHand() + "です");
         judge(p, b);
+        int finish = isFinished();
+        if(finish == 0 && finish == 1){
+            scanner.close();
+        }
+        this.round += 1;
     }
 
     public void discard(Character p, int cardNumber) {
@@ -83,12 +109,27 @@ public class Facilitator {
 
         if(playerPoint > botPoint){
             int point = p.getPoint();
-            p.setPoint(point+=1);
+            p.setPoint(point+1);
             System.out.println("あなたの勝ちです！");
         }else if(playerPoint < botPoint){
             int point = b.getPoint();
-            b.setPoint(point+=1);
+            b.setPoint(point+1);
             System.out.println("あなたの負けです…");
+        }else{
+            System.out.println("引き分けです。");
+        }
+    }
+
+    public int isFinished(){
+        var p = c.get(0);
+        var b = c.get(1);
+        final int MATCHPOINT = 3;
+        if(p.getPoint() == MATCHPOINT){
+            return 0;
+        }else if(b.getPoint() == MATCHPOINT){
+            return 1;
+        }else{
+            return 2;
         }
     }
 }
