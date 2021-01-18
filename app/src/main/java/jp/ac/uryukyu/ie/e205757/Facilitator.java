@@ -128,11 +128,11 @@ public class Facilitator {
         boolean existNumber = false;
         ArrayList<Integer> playerHand = new ArrayList<Integer>();
         playerHand = p.getHand();
-        System.out.println(cardNumber + "のカードを捨てました。");
         for (int i = 0; i < playerHand.size(); i++) {
             int j = playerHand.get(i);
             if (cardNumber == j) {
                 playerHand.remove(i);
+                System.out.println(cardNumber + "のカードを捨てました。");
                 existNumber = true;
                 break;
             }
